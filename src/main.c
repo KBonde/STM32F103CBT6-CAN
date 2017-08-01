@@ -81,7 +81,6 @@ static void MX_CAN_Init(void);
 void StartDefaultTask(void const * argument);
 
 void task(void *pvArg);
-void lamp(void *pvArg);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -149,7 +148,6 @@ int main(void)
 	  HAL_UART_Transmit(&huart1, (uint8_t*)"Error \n\r", strlen("Error \n\r"), HAL_MAX_DELAY);
     }
 
-  xTaskCreate(lamp, "Lamp", 128, NULL, 2, NULL);
   xTaskCreate(task, "Task", 128, NULL, 1, NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -179,15 +177,7 @@ int main(void)
 
 }
 
-void lamp(void *pvArg) {
-	for(;;) {
-		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_0);
-		vTaskDelay(pdMS_TO_TICKS(500));
-	}
-}
-
 void task(void *pvArg) {
-
 	for(;;) {
 		hcan.pTxMsg->Data[0] = 0x01;
 		hcan.pTxMsg->Data[1] = 0xAD;
